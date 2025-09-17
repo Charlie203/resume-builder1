@@ -294,7 +294,7 @@ const styles: { [key: string]: CSSProperties } = {
   input: inputStyles,
   textarea: { ...inputStyles, resize: 'vertical', minHeight: '100px' },
   skillsContainer: { display: 'flex', gap: '8px', flexWrap: 'wrap' },
-  skillInput: { padding: '6px 12px', borderRadius: '999px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', background: '#fff' },
+  skillInput: { padding: '6px 12px', borderRadius: '999px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', background: '#fff', color: '#111827' },
   addButton: { padding: '8px 14px', borderRadius: '10px', border: 'none', color: '#ffffff', cursor: 'pointer', fontWeight: 600, fontSize: '14px', transition: 'background 0.2s ease, transform 0.1s ease' },
   smallButton: { fontSize: '12px', padding: '6px 10px', alignSelf: 'flex-start' },
   removeButton: { position: 'absolute', top: -5, right: -5, width: '20px', height: '20px', borderRadius: '50%', border: 'none', background: '#dc2626', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', zIndex: 10, lineHeight: '1px', boxShadow: '0 2px 6px rgba(0,0,0,0.2)' },
