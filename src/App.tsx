@@ -251,7 +251,8 @@ const Section = ({ title, onAdd, children }: { title: string, onAdd?: () => void
   <div style={styles.section}>
     <div style={styles.sectionHeader}>
       <h2 style={styles.h2}>{title}</h2>
-      {onAdd && <button onClick={onAdd} style={styles.addButton}>+ Add</button>}
+      {/* Use the dynamic addButton style here */}
+      {onAdd && <button onClick={onAdd} style={{...styles.addButton, background: ts.accent}}>+ Add</button>}
     </div>
     {children}
   </div>
@@ -295,9 +296,27 @@ const styles: { [key: string]: CSSProperties } = {
   textarea: { ...inputStyles, resize: 'vertical', minHeight: '100px' },
   skillsContainer: { display: 'flex', gap: '8px', flexWrap: 'wrap' },
   skillInput: { padding: '6px 12px', borderRadius: '999px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', background: '#fff' },
-  addButton: { padding: '6px 12px', borderRadius: '8px', border: 'none', background: 'rgba(0,0,0,0.08)', cursor: 'pointer', fontWeight: 500 },
-  smallButton: { fontSize: '12px', padding: '4px 8px', alignSelf: 'flex-start' },
-  removeButton: { position: 'absolute', top: -5, right: -5, width: '20px', height: '20px', borderRadius: '50%', border: 'none', background: '#333', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', zIndex: 10, lineHeight: '1px' },
+  // UPDATED addButton style
+  addButton: {
+    padding: '8px 14px',
+    borderRadius: '10px',
+    border: 'none',
+    color: '#ffffff',
+    cursor: 'pointer',
+    fontWeight: 600,
+    fontSize: '14px',
+    transition: 'background 0.2s ease, transform 0.1s ease',
+    // Note: dynamic background is applied directly where the button is rendered due to ts.accent
+  },
+  // UPDATED smallButton style
+  smallButton: {
+    fontSize: '12px',
+    padding: '6px 10px',
+    alignSelf: 'flex-start',
+    // Note: dynamic background and color are applied directly where the button is rendered
+    // to use ts.accent correctly.
+  },
+  removeButton: { position: 'absolute', top: -5, right: -5, width: '20px', height: '20px', borderRadius: '50%', border: 'none', background: '#dc2626', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', zIndex: 10, lineHeight: '1px', boxShadow: '0 2px 6px rgba(0,0,0,0.2)' },
   downloadButtons: { display: 'flex', gap: '12px', marginTop: '24px', borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '24px' },
   button: { flex: 1, padding: '12px', borderRadius: '12px', border: 'none', cursor: 'pointer', fontWeight: 600, transition: 'transform 0.2s' },
   previewPane: { borderRadius: '16px', padding: '20px' },
