@@ -137,7 +137,7 @@ export default function App() {
               <textarea style={styles.textarea} value={summary} onChange={e => setSummary(e.target.value)} placeholder="Summary" rows={5} />
             </Section>
 
-            <Section title="Experience" onAdd={() => handleAdd(setExperiences, { role: "New Role", company: "Company", period: "Year — Year", bullets: ["Achievement"] })}>
+            <Section title="Experience" onAdd={() => handleAdd(setExperiences, { role: "New Role", company: "Company", period: "Year — Year", bullets: ["Achievement"] })} accentColor={ts.accent}>
               {experiences.map((ex, i) => (
                 <div key={i} style={styles.itemCard}>
                   <RemovableWrapper onRemove={() => handleRemove(setExperiences, i)}>
@@ -150,14 +150,14 @@ export default function App() {
                             <input style={styles.input} value={b} onChange={e => handleNestedUpdate(i, bi, e.target.value)} />
                         </RemovableWrapper>
                       ))}
-                      <button onClick={() => addBullet(i)} style={{...styles.addButton, ...styles.smallButton}}>+ Add Bullet</button>
+                      <button onClick={() => addBullet(i)} style={{...styles.addButton, ...styles.smallButton, background: `${ts.accent}20`, color: ts.accent}}>+ Add Bullet</button>
                     </div>
                   </RemovableWrapper>
                 </div>
               ))}
             </Section>
             
-            <Section title="Education" onAdd={() => handleAdd(setEducation, { school: "University", degree: "Degree", year: "Year" })}>
+            <Section title="Education" onAdd={() => handleAdd(setEducation, { school: "University", degree: "Degree", year: "Year" })} accentColor={ts.accent}>
               {education.map((ed, i) => (
                 <div key={i} style={styles.itemCard}>
                    <RemovableWrapper onRemove={() => handleRemove(setEducation, i)}>
@@ -169,7 +169,7 @@ export default function App() {
               ))}
             </Section>
 
-            <Section title="Skills" onAdd={() => handleAdd<string>(setSkills, 'New Skill')}>
+            <Section title="Skills" onAdd={() => handleAdd<string>(setSkills, 'New Skill')} accentColor={ts.accent}>
               <div style={styles.skillsContainer}>
                 {skills.map((s, i) => (
                     <RemovableWrapper onRemove={() => handleRemove(setSkills, i)} key={i}>
@@ -247,12 +247,11 @@ export default function App() {
 }
 
 // --- HELPER COMPONENTS ---
-const Section = ({ title, onAdd, children }: { title: string, onAdd?: () => void, children: React.ReactNode }) => (
+const Section = ({ title, onAdd, children, accentColor }: { title: string, onAdd?: () => void, children: React.ReactNode, accentColor?: string }) => (
   <div style={styles.section}>
     <div style={styles.sectionHeader}>
       <h2 style={styles.h2}>{title}</h2>
-      {/* Use the dynamic addButton style here */}
-      {onAdd && <button onClick={onAdd} style={{...styles.addButton, background: ts.accent}}>+ Add</button>}
+      {onAdd && <button onClick={onAdd} style={{...styles.addButton, background: accentColor}}>+ Add</button>}
     </div>
     {children}
   </div>
@@ -276,7 +275,7 @@ const inputStyles: CSSProperties = {
     border: '1px solid rgba(0,0,0,0.08)',
     background: 'rgba(255,255,255,0.8)',
     boxSizing: 'border-box',
-    color: '#111827' // Ensures text is dark and visible
+    color: '#111827'
 };
 
 const styles: { [key: string]: CSSProperties } = {
@@ -296,26 +295,8 @@ const styles: { [key: string]: CSSProperties } = {
   textarea: { ...inputStyles, resize: 'vertical', minHeight: '100px' },
   skillsContainer: { display: 'flex', gap: '8px', flexWrap: 'wrap' },
   skillInput: { padding: '6px 12px', borderRadius: '999px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', background: '#fff' },
-  // UPDATED addButton style
-  addButton: {
-    padding: '8px 14px',
-    borderRadius: '10px',
-    border: 'none',
-    color: '#ffffff',
-    cursor: 'pointer',
-    fontWeight: 600,
-    fontSize: '14px',
-    transition: 'background 0.2s ease, transform 0.1s ease',
-    // Note: dynamic background is applied directly where the button is rendered due to ts.accent
-  },
-  // UPDATED smallButton style
-  smallButton: {
-    fontSize: '12px',
-    padding: '6px 10px',
-    alignSelf: 'flex-start',
-    // Note: dynamic background and color are applied directly where the button is rendered
-    // to use ts.accent correctly.
-  },
+  addButton: { padding: '8px 14px', borderRadius: '10px', border: 'none', color: '#ffffff', cursor: 'pointer', fontWeight: 600, fontSize: '14px', transition: 'background 0.2s ease, transform 0.1s ease' },
+  smallButton: { fontSize: '12px', padding: '6px 10px', alignSelf: 'flex-start' },
   removeButton: { position: 'absolute', top: -5, right: -5, width: '20px', height: '20px', borderRadius: '50%', border: 'none', background: '#dc2626', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', zIndex: 10, lineHeight: '1px', boxShadow: '0 2px 6px rgba(0,0,0,0.2)' },
   downloadButtons: { display: 'flex', gap: '12px', marginTop: '24px', borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '24px' },
   button: { flex: 1, padding: '12px', borderRadius: '12px', border: 'none', cursor: 'pointer', fontWeight: 600, transition: 'transform 0.2s' },
