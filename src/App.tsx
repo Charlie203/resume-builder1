@@ -11,6 +11,7 @@ type ThemeName = "elegant" | "dark" | "corporate" | "creative" | "light";
 export default function App() {
   // --- STATE ---
   const [theme, setTheme] = useState<ThemeName>("elegant");
+  const [photo, setPhoto] = useState<string | null>(null); // State for the photo
   const [name, setName] = useState("Your Name");
   const [title, setTitle] = useState("Senior Product Designer");
   const [email, setEmail] = useState("name@example.com");
@@ -22,9 +23,21 @@ export default function App() {
   ]);
   const [education, setEducation] = useState<Edu[]>([{ school: "University of Design", degree: "B.A. Graphic Design", year: "2017" }]);
   const [skills, setSkills] = useState<string[]>(["Product Design", "Figma", "UX Research", "Prototyping", "Design Systems"]);
+  
   const previewRef = useRef<HTMLDivElement | null>(null);
+  const photoInputRef = useRef<HTMLInputElement | null>(null); // Ref for file input
 
   // --- DATA HANDLERS ---
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhoto(reader.result as string);
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
   const handleUpdate = <T,>(setter: React.Dispatch<React.SetStateAction<T[]>>, i: number, field: keyof T, value: string) => {
     setter(prev => prev.map((item, index) => index === i ? { ...item, [field]: value } : item));
   };
@@ -67,6 +80,7 @@ export default function App() {
   };
   
   const downloadATSPDF = () => {
+    // ATS resumes typically don't include photos, so no change is needed here.
     const doc = new jsPDF({ unit: "pt", format: "a4" });
     let y = 40;
     const addText = (text: string, size: number, x: number, isBold = false) => {
@@ -127,6 +141,27 @@ export default function App() {
           </div>
 
           <div style={styles.formContainer}>
+            <Section title="Profile Picture">
+              <div style={styles.photoUploadContainer}>
+                {photo ? (
+                  <img src={photo} alt="Profile Preview" style={styles.photoPreview} />
+                ) : (
+                  <div style={{...styles.photoPreview, background: 'rgba(0,0,0,0.04)'}}/>
+                )}
+                <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+                    <input type="file" accept="image/*" onChange={handlePhotoUpload} ref={photoInputRef} style={{ display: 'none' }} />
+                    <button onClick={() => photoInputRef.current?.click()} style={{...styles.button, padding: '8px', fontSize: '14px', background: ts.accent, color: '#fff'}}>
+                        Upload Photo
+                    </button>
+                    {photo && (
+                        <button onClick={() => setPhoto(null)} style={{...styles.button, padding: '8px', fontSize: '14px', background: `${ts.subduedText}33`, color: ts.text}}>
+                            Remove
+                        </button>
+                    )}
+                </div>
+              </div>
+            </Section>
+
             <Section title="Personal Details">
               <input style={styles.input} value={name} onChange={e => setName(e.target.value)} placeholder="Full Name" />
               <input style={styles.input} value={title} onChange={e => setTitle(e.target.value)} placeholder="Job Title" />
@@ -190,9 +225,10 @@ export default function App() {
         <main style={{...styles.previewPane, background: ts.cardBg, boxShadow: `0 16px 40px ${ts.text}1a` }}>
           <div ref={previewRef} style={{...styles.previewContent, color: ts.text }}>
             <header style={styles.previewHeader}>
-              <div>
-                <div style={{ fontSize: 28, fontWeight: 800 }}>{name}</div>
-                <div style={{ marginTop: 6, fontSize: 14, opacity: 0.9, color: ts.subduedText }}>{title}</div>
+              {photo && <img src={photo} alt="Profile" style={styles.previewPhoto} />}
+              <div style={{flex: 1}}>
+                  <div style={{ fontSize: 28, fontWeight: 800 }}>{name}</div>
+                  <div style={{ marginTop: 6, fontSize: 14, opacity: 0.9, color: ts.subduedText }}>{title}</div>
               </div>
               <div style={{ textAlign: 'right', fontSize: 13, opacity: 0.9, color: ts.subduedText }}>
                 <div>{email}</div>
@@ -291,6 +327,8 @@ const styles: { [key: string]: CSSProperties } = {
   sectionHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
   itemCard: { padding: '14px', borderRadius: '12px', background: 'rgba(0,0,0,0.04)', display: 'flex', flexDirection: 'column', gap: '8px' },
   row: { display: 'flex', gap: '8px' },
+  photoUploadContainer: { display: 'grid', gridTemplateColumns: '100px 1fr', gap: '16px', alignItems: 'center' },
+  photoPreview: { width: '100px', height: '100px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(0,0,0,0.06)' },
   input: inputStyles,
   textarea: { ...inputStyles, resize: 'vertical', minHeight: '100px' },
   skillsContainer: { display: 'flex', gap: '8px', flexWrap: 'wrap' },
@@ -302,6 +340,7 @@ const styles: { [key: string]: CSSProperties } = {
   button: { flex: 1, padding: '12px', borderRadius: '12px', border: 'none', cursor: 'pointer', fontWeight: 600, transition: 'transform 0.2s' },
   previewPane: { borderRadius: '16px', padding: '20px' },
   previewContent: { maxWidth: '800px', margin: '0 auto', padding: '40px', borderRadius: '12px', transition: 'background 0.3s' },
-  previewHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '12px', borderBottom: `1px solid rgba(0,0,0,0.08)` },
+  previewHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '12px', borderBottom: `1px solid rgba(0,0,0,0.08)`, gap: '24px' },
+  previewPhoto: { width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover' },
   previewH3: { margin: 0, fontSize: '14px', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase' },
 };
